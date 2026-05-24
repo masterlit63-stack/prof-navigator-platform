@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Бесплатный тест профориентации для подростков. 10 вопросов — и ты узнаешь профессии, которые совпадают с твоими интересами и типом мышления.">
+  <title>ПрофНавигатор — узнай свою профессию за 5 минут</title>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ПрофНавигатор — узнай свою профессию за 5 минут">
+  <meta property="og:description" content="Бесплатный тест профориентации. 10 вопросов — получи именованный профессиональный профиль с рекомендациями.">
+  <meta property="og:url" content="https://masterlit63-stack.github.io/prof-navigator-platform/">
+  <meta property="og:site_name" content="ПрофНавигатор">
+  <meta property="og:locale" content="ru_RU">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ПрофНавигатор — узнай свою профессию за 5 минут">
+  <meta name="twitter:description" content="Бесплатный тест профориентации. 10 вопросов — получи именованный профессиональный профиль.">
+
+  <!-- YM: вставить перед запуском трафика
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+    k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a)})
+    (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+    ym(XXXXXXXX,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXX" style="position:absolute;left:-9999px;" alt=""/></div></noscript>
+  -->
+
+  <style>
+    /* Placeholder — CSS будет добавлен на Шаге 2 */
+    body { margin: 0; background: #070e1b; color: #f1f5f9;
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    [id^="screen-"] { min-height: 100vh; padding: 24px; }
+    .dev-nav { position: fixed; bottom: 16px; right: 16px; z-index: 9999;
+               display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .dev-nav button { padding: 8px 12px; background: rgba(249,115,22,0.3);
+                      border: 1px solid #f97316; color: #f1f5f9; cursor: pointer;
+                      border-radius: 8px; font-size: 13px; }
+    .dev-nav button:hover { background: rgba(249,115,22,0.5); }
+  </style>
+</head>
+<body>
+
+  <!-- ЭКРАН 1: ЛЕНДИНГ -->
+  <section id="screen-landing" style="display:block">
+    <h1>Лендинг — будет добавлен на Шаге 3</h1>
+  </section>
+
+  <!-- ЭКРАН 2: КВИЗ -->
+  <section id="screen-quiz" style="display:none">
+    <h1>Квиз — будет добавлен на Шаге 5</h1>
+  </section>
+
+  <!-- ЭКРАН 3: LOADING -->
+  <section id="screen-loading" style="display:none">
+    <h1>Загрузка — будет добавлена на Шаге 7</h1>
+  </section>
+
+  <!-- ЭКРАН 4: РЕЗУЛЬТАТ -->
+  <section id="screen-result" style="display:none">
+    <h1>Результат — будет добавлен на Шаге 8</h1>
+  </section>
+
+  <!-- DEV-навигация (убрать перед релизом) -->
+  <nav class="dev-nav" aria-hidden="true">
+    <button onclick="showScreen('screen-landing')">Landing</button>
+    <button onclick="showScreen('screen-quiz')">Quiz</button>
+    <button onclick="showScreen('screen-loading')">Loading</button>
+    <button onclick="showScreen('screen-result')">Result</button>
+  </nav>
+
+  <script>
+    function showScreen(id) {
+      document.querySelectorAll('[id^="screen-"]').forEach(s => s.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+  </script>
+
+</body>
+</html>
