@@ -728,6 +728,50 @@
     }
     .result-retry a:hover { color: var(--text); }
 
+    /* ══════════════════════════════════════
+       EDGE CASE ЭКРАНЫ
+       ══════════════════════════════════════ */
+    .quiz-edge-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 24px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .quiz-edge-emoji { font-size: 56px; margin-bottom: 20px; line-height: 1; }
+    .quiz-edge-wrap h2 { margin-bottom: 16px; }
+    .quiz-edge-sub { color: var(--muted); font-size: 16px; margin-bottom: 32px; }
+    .quiz-edge-badge {
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .quiz-edge-badge--result {
+      background: rgba(14,165,233,0.1);
+      border: 1px solid rgba(14,165,233,0.25);
+      color: var(--blue);
+    }
+    .quiz-edge-badge--progress {
+      background: rgba(249,115,22,0.1);
+      border: 1px solid rgba(249,115,22,0.25);
+      color: var(--accent);
+      font-size: 22px;
+    }
+    .quiz-edge-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+    }
+
     /* ── DEV-навигация (убрать перед релизом) ── */
     .dev-nav {
       position: fixed; bottom: 16px; right: 16px; z-index: 9999;
@@ -1517,6 +1561,46 @@
   <!-- ЭКРАН 2: КВИЗ -->
   <section id="screen-quiz" style="display:none">
 
+    <!-- [Edge case] Повторный визит — уже есть результат -->
+    <div id="quiz-repeat" style="display:none">
+      <div class="quiz-edge-wrap">
+        <div class="quiz-edge-emoji" aria-hidden="true">🎉</div>
+        <h2>Ты уже проходил тест</h2>
+        <div class="quiz-edge-badge quiz-edge-badge--result">
+          Твой профиль: <span id="repeat-profile-name">—</span>
+        </div>
+        <p class="quiz-edge-sub">Хочешь посмотреть результат или пройти заново?</p>
+        <div class="quiz-edge-btns">
+          <button class="btn btn-primary btn--full" onclick="viewSavedResult()">
+            Посмотреть результат
+          </button>
+          <button class="btn btn-outline btn--full" onclick="resetAndStart()">
+            Пройти заново
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- [Edge case] Прерванный квиз — есть прогресс, нет результата -->
+    <div id="quiz-resume" style="display:none">
+      <div class="quiz-edge-wrap">
+        <div class="quiz-edge-emoji" aria-hidden="true">⏸️</div>
+        <h2>Ты не дошёл до конца</h2>
+        <div class="quiz-edge-badge quiz-edge-badge--progress">
+          Вопрос <span id="resume-q-num">1</span> из 10
+        </div>
+        <p class="quiz-edge-sub">Продолжить с того места или начать заново?</p>
+        <div class="quiz-edge-btns">
+          <button class="btn btn-primary btn--full" onclick="resumeQuiz()">
+            Продолжить
+          </button>
+          <button class="btn btn-outline btn--full" onclick="resetAndStart()">
+            Начать заново
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- [Screen 0] Вводный — выбор режима -->
     <div id="quiz-intro">
       <div class="quiz-intro">
@@ -1737,12 +1821,100 @@
       if (!isOpen) item.classList.add('open');
     }
 
-    /* ── startQuiz: вызывается с лендинга (edge cases — Шаг 10) ── */
+    /* ══════════════════════════════════════
+       EDGE CASES — JS
+       ══════════════════════════════════════ */
+
+    /* ── Вспомогатели localStorage ── */
+    function getSavedResult() {
+      try { return JSON.parse(localStorage.getItem('pn_result')); } catch(e) { return null; }
+    }
+    function getSavedProgress() {
+      try { return JSON.parse(localStorage.getItem('pn_quiz')); }  catch(e) { return null; }
+    }
+
+    /* ── Скрыть все панели квиза ── */
+    function hideAllQuizPanels() {
+      ['quiz-repeat','quiz-resume','quiz-intro','quiz-main'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+    }
+
+    /* ── startQuiz: проверяет localStorage перед стартом ── */
     function startQuiz() {
+      const savedResult   = getSavedResult();
+      const savedProgress = getSavedProgress();
+
+      showScreen('screen-quiz');
+      hideAllQuizPanels();
+
+      if (savedResult) {
+        /* Повторный визит — есть завершённый результат */
+        const name = (PROFILES[savedResult.profileId] || COMBINED_PROFILES[savedResult.profileId])
+          ?.name || savedResult.profileName || savedResult.profileId;
+        document.getElementById('repeat-profile-name').textContent = name;
+        document.getElementById('quiz-repeat').style.display = '';
+        return;
+      }
+
+      if (savedProgress && savedProgress.answers && savedProgress.answers.length > 0) {
+        /* Прерванный квиз — есть прогресс без результата */
+        document.getElementById('resume-q-num').textContent = (savedProgress.currentQ || 0) + 1;
+        document.getElementById('quiz-resume').style.display = '';
+        return;
+      }
+
+      /* Чистый старт */
+      freshStart();
+    }
+
+    /* ── Чистый старт квиза ── */
+    function freshStart() {
       quizState = { mode: 'teen', currentQ: 0,
                     scores: { A:0, T:0, S:0, X:0, P:0 }, answers: [] };
+      quizAnimating = false;
       document.getElementById('quiz-intro').style.display = '';
-      document.getElementById('quiz-main').style.display = 'none';
+    }
+
+    /* ── Посмотреть сохранённый результат ── */
+    function viewSavedResult() {
+      const saved = getSavedResult();
+      if (!saved) return;
+      showResult(saved.profileId);
+      showScreen('screen-result');
+    }
+
+    /* ── Продолжить прерванный квиз ── */
+    function resumeQuiz() {
+      const saved = getSavedProgress();
+      if (!saved) { resetAndStart(); return; }
+      quizState = {
+        mode:      saved.mode    || 'teen',
+        currentQ:  saved.currentQ || 0,
+        scores:    saved.scores  || { A:0, T:0, S:0, X:0, P:0 },
+        answers:   saved.answers || [],
+      };
+      quizAnimating = false;
+      hideAllQuizPanels();
+      document.getElementById('quiz-main').style.display = 'flex';
+      renderQuestion(quizState.currentQ);
+    }
+
+    /* ── Сброс и чистый старт ── */
+    function resetAndStart() {
+      try {
+        localStorage.removeItem('pn_quiz');
+        localStorage.removeItem('pn_result');
+      } catch(e) {}
+      hideAllQuizPanels();
+      freshStart();
+      document.getElementById('quiz-intro').style.display = '';
+    }
+
+    /* resetQuiz() для ссылки «Пройти заново» на странице результата */
+    function resetQuiz() {
+      resetAndStart();
       showScreen('screen-quiz');
     }
 
@@ -2004,18 +2176,17 @@
       showScreen('screen-quiz');
     }
 
-    /* ── Подсчёт победителя ── */
+    /* ── Подсчёт победителя — всегда возвращает строку-ключ ── */
     function calculateResult() {
       const sorted = Object.entries(quizState.scores).sort((a, b) => b[1] - a[1]);
       const [id1, sc1] = sorted[0];
       const [id2, sc2] = sorted[1];
       if (sc1 - sc2 <= 1) {
-        const key = id1 + id2;
+        const key    = id1 + id2;
         const keyRev = id2 + id1;
-        if (typeof COMBINED_PROFILES !== 'undefined') {
-          if (COMBINED_PROFILES[key])    return COMBINED_PROFILES[key];
-          if (COMBINED_PROFILES[keyRev]) return COMBINED_PROFILES[keyRev];
-        }
+        if (COMBINED_PROFILES[key])    return key;
+        if (COMBINED_PROFILES[keyRev]) return keyRev;
+        /* Fallback: если пары нет — победитель по очкам */
       }
       return id1;
     }
