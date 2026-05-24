@@ -1402,14 +1402,292 @@
       if (!isOpen) item.classList.add('open');
     }
 
-    /* ── Заглушка для кнопок CTA лендинга (логика придёт в Шаге 6) ── */
-    function startQuiz() { showScreen('screen-quiz'); }
+    /* ── startQuiz: вызывается с лендинга (edge cases — Шаг 10) ── */
+    function startQuiz() {
+      quizState = { mode: 'teen', currentQ: 0,
+                    scores: { A:0, T:0, S:0, X:0, P:0 }, answers: [] };
+      document.getElementById('quiz-intro').style.display = '';
+      document.getElementById('quiz-main').style.display = 'none';
+      showScreen('screen-quiz');
+    }
 
     /* ── Footer: прокрутить к блоку автора ── */
     function scrollToAuthor(e) {
       e.preventDefault();
       const author = document.querySelector('.author-wrap');
       if (author) author.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ══════════════════════════════════════
+       КВИЗ — константы
+       ══════════════════════════════════════ */
+    const PROGRESS_STEPS = [15, 25, 35, 44, 55, 63, 72, 85, 92, 100];
+
+    const MICRO_COPY = {
+      1: 'Хороший старт!',
+      3: 'Запомним это про тебя',
+      5: 'Уже на полпути! Ты быстро разбираешься',
+      8: 'Почти готово — финальный рывок'
+    };
+
+    /* Вопросы строго из SPEC.md раздел 5.2 */
+    const QUESTIONS = [
+      { /* Q1 — П не в этом вопросе */
+        teen:   'Что тебе интереснее всего делать?',
+        parent: 'Что вашему ребёнку интереснее всего делать?',
+        answers: [
+          { text: 'Разбираться в сложных задачах и находить решения', profile: 'A' },
+          { text: 'Придумывать, создавать, воплощать идеи',           profile: 'T' },
+          { text: 'Общаться с людьми и помогать им',                  profile: 'S' },
+          { text: 'Собирать, чинить, строить что-то руками',          profile: 'X' },
+        ]
+      },
+      { /* Q2 — X не в этом вопросе */
+        teen:   'Какой урок в школе тебе даётся легче всего?',
+        parent: 'Какой урок в школе вашему ребёнку даётся легче всего?',
+        answers: [
+          { text: 'Математика, физика, информатика',         profile: 'A' },
+          { text: 'Рисование, музыка, литература',           profile: 'T' },
+          { text: 'Биология, психология, обществознание',    profile: 'S' },
+          { text: 'История, экономика, география',           profile: 'P' },
+        ]
+      },
+      { /* Q3 — С не в этом вопросе */
+        teen:   'Что ты чаще всего делаешь в свободное время?',
+        parent: 'Что ваш ребёнок чаще всего делает в свободное время?',
+        answers: [
+          { text: 'Смотрю видео о технологиях, решаю задачи, программирую', profile: 'A' },
+          { text: 'Рисую, пишу, снимаю видео, придумываю истории',          profile: 'T' },
+          { text: 'Думаю над проектами, ищу идеи и возможности',            profile: 'P' },
+          { text: 'Разбираю технику, занимаюсь спортом, мастерю',           profile: 'X' },
+        ]
+      },
+      { /* Q4 — Т не в этом вопросе */
+        teen:   'Как тебе комфортнее всего работать?',
+        parent: 'Как вашему ребёнку комфортнее всего работать?',
+        answers: [
+          { text: 'Один, сосредоточенно, в тишине',                   profile: 'A' },
+          { text: 'С людьми — помогать, объяснять, поддерживать',      profile: 'S' },
+          { text: 'Ставить цели и вести команду к результату',         profile: 'P' },
+          { text: 'В движении, на объекте, работая руками',            profile: 'X' },
+        ]
+      },
+      { /* Q5 — А не в этом вопросе */
+        teen:   'Что тебя больше всего мотивирует?',
+        parent: 'Что вашего ребёнка больше всего мотивирует?',
+        answers: [
+          { text: 'Создать что-то красивое и оригинальное',      profile: 'T' },
+          { text: 'Видеть, что реально помог кому-то',           profile: 'S' },
+          { text: 'Достичь цели и получить признание',           profile: 'P' },
+          { text: 'Получить конкретный измеримый результат',     profile: 'X' },
+        ]
+      },
+      { /* Q6 — П не в этом вопросе */
+        teen:   'Как ты обычно принимаешь решения?',
+        parent: 'Как ваш ребёнок обычно принимает решения?',
+        answers: [
+          { text: 'Анализирую данные, смотрю логику',                 profile: 'A' },
+          { text: 'Доверяю интуиции, ищу нестандартный путь',        profile: 'T' },
+          { text: 'Собираю мнения, советуюсь с людьми',              profile: 'S' },
+          { text: 'Опираюсь на проверенный опыт и практику',         profile: 'X' },
+        ]
+      },
+      { /* Q7 — X не в этом вопросе */
+        teen:   'Что важнее в будущей профессии?',
+        parent: 'Что важнее в будущей профессии вашего ребёнка?',
+        answers: [
+          { text: 'Чёткость, логика, стать признанным экспертом',     profile: 'A' },
+          { text: 'Свобода, творчество, возможность самовыражения',   profile: 'T' },
+          { text: 'Польза людям и обществу',                          profile: 'S' },
+          { text: 'Влияние, управление, возможность строить своё',    profile: 'P' },
+        ]
+      },
+      { /* Q8 — С не в этом вопросе */
+        teen:   'Какая рабочая среда тебе ближе?',
+        parent: 'Какая рабочая среда вашему ребёнку ближе?',
+        answers: [
+          { text: 'Офис, компьютер, данные, цифровой мир',                  profile: 'A' },
+          { text: 'Студия, мастерская, пространство для творчества',         profile: 'T' },
+          { text: 'Свой бизнес, стартап, переговоры, сделки',               profile: 'P' },
+          { text: 'Производство, стройка, лаборатория, поле',               profile: 'X' },
+        ]
+      },
+      { /* Q9 — Т не в этом вопросе */
+        teen:   'Что тебе даётся тяжелее всего?',
+        parent: 'Что вашему ребёнку даётся тяжелее всего?',
+        answers: [
+          { text: 'Работать без чёткого плана и структуры',           profile: 'A' },
+          { text: 'Долго находиться без живого общения с людьми',     profile: 'S' },
+          { text: 'Работать строго по инструкции без свободы',        profile: 'X' },
+          { text: 'Доводить дела до конца без видимого результата',   profile: 'P' },
+        ]
+      },
+      { /* Q10 — А не в этом вопросе */
+        teen:   'Как тебя чаще всего описывают другие?',
+        parent: 'Как чаще всего описывают вашего ребёнка другие?',
+        answers: [
+          { text: '«Общительный, открытый, всегда готов помочь»',           profile: 'S' },
+          { text: '«Творческий, оригинальный, видит по-другому»',           profile: 'T' },
+          { text: '«Инициативный, пробивной, всегда с новой идеей»',        profile: 'P' },
+          { text: '«Надёжный, мастеровитый, доводит до конца»',             profile: 'X' },
+        ]
+      },
+    ];
+
+    /* ── Состояние квиза ── */
+    let quizState = { mode: 'teen', currentQ: 0,
+                      scores: { A:0, T:0, S:0, X:0, P:0 }, answers: [] };
+    let quizAnimating = false;
+
+    /* ── Выбор режима (Screen 0) ── */
+    function selectMode(mode) {
+      quizState.mode = mode;
+      saveQuizProgress();
+      document.getElementById('quiz-intro').style.display = 'none';
+      document.getElementById('quiz-main').style.display = 'flex';
+      renderQuestion(0);
+    }
+
+    /* ── Рендер вопроса ── */
+    function renderQuestion(qIndex) {
+      const q   = QUESTIONS[qIndex];
+      const key = quizState.mode === 'teen' ? 'teen' : 'parent';
+
+      document.getElementById('quiz-progress-fill').style.width = PROGRESS_STEPS[qIndex] + '%';
+      document.getElementById('quiz-counter').textContent = `Вопрос ${qIndex + 1} из 10`;
+      document.getElementById('quiz-back-btn').disabled = (qIndex === 0);
+      document.getElementById('question-title').textContent = q[key];
+
+      const list = document.getElementById('answers-list');
+      list.innerHTML = '';
+      q.answers.forEach(answer => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-card';
+        btn.innerHTML =
+          `<span class="answer-card__check" aria-hidden="true">` +
+            `<svg width="12" height="12" viewBox="0 0 12 12" fill="none">` +
+              `<path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>` +
+            `</svg>` +
+          `</span>` +
+          `<span class="answer-card__text">${answer.text}</span>`;
+        btn.addEventListener('click', () => selectAnswer(answer.profile, btn, qIndex));
+        list.appendChild(btn);
+      });
+
+      const mc = document.getElementById('quiz-microcopy');
+      mc.textContent = '';
+      mc.classList.remove('visible');
+    }
+
+    /* ── Выбор ответа — точный тайминг из SPEC ── */
+    function selectAnswer(profile, cardEl, qIndex) {
+      if (quizAnimating) return;
+      quizAnimating = true;
+
+      /* t=0ms: подсветка карточки */
+      cardEl.classList.add('selected');
+
+      /* t=50ms: микрокопия + запись очка */
+      setTimeout(() => {
+        quizState.scores[profile]++;
+        quizState.answers.push(profile);
+        saveQuizProgress();
+
+        const mc = document.getElementById('quiz-microcopy');
+        mc.textContent = MICRO_COPY[qIndex + 1] || 'Записали';
+        mc.classList.add('visible');
+      }, 50);
+
+      /* t=650ms: слайд-анимация */
+      setTimeout(() => {
+        const slide = document.getElementById('quiz-slide');
+
+        if (qIndex >= 9) {
+          slide.classList.add('slide-out-left');
+          setTimeout(() => { quizAnimating = false; showLoading(); }, 250);
+          return;
+        }
+
+        slide.classList.add('slide-out-left');
+        setTimeout(() => {
+          slide.classList.remove('slide-out-left');
+          quizState.currentQ = qIndex + 1;
+          renderQuestion(qIndex + 1);
+
+          slide.classList.add('slide-in-right');
+          setTimeout(() => {
+            slide.classList.remove('slide-in-right');
+            document.getElementById('quiz-microcopy').classList.remove('visible');
+            quizAnimating = false;
+          }, 250); /* t=900ms: вопрос виден */
+        }, 250);
+      }, 650);
+    }
+
+    /* ── Кнопка «Назад» ── */
+    function quizGoBack() {
+      if (quizAnimating || quizState.currentQ === 0) return;
+      quizAnimating = true;
+
+      const lastProfile = quizState.answers.pop();
+      if (lastProfile) quizState.scores[lastProfile] = Math.max(0, quizState.scores[lastProfile] - 1);
+      quizState.currentQ--;
+      saveQuizProgress();
+
+      const slide = document.getElementById('quiz-slide');
+      slide.classList.add('slide-out-right');
+      setTimeout(() => {
+        slide.classList.remove('slide-out-right');
+        renderQuestion(quizState.currentQ);
+        slide.classList.add('slide-in-left');
+        setTimeout(() => { slide.classList.remove('slide-in-left'); quizAnimating = false; }, 250);
+      }, 250);
+    }
+
+    /* ── localStorage ── */
+    function saveQuizProgress() {
+      try {
+        localStorage.setItem('pn_quiz', JSON.stringify({
+          mode: quizState.mode,
+          currentQ: quizState.currentQ,
+          answers: quizState.answers,
+          scores: quizState.scores,
+        }));
+      } catch(e) {}
+    }
+
+    function resetQuiz() {
+      quizState = { mode: 'teen', currentQ: 0,
+                    scores: { A:0, T:0, S:0, X:0, P:0 }, answers: [] };
+      quizAnimating = false;
+      try {
+        localStorage.removeItem('pn_quiz');
+        localStorage.removeItem('pn_result');
+      } catch(e) {}
+      document.getElementById('quiz-intro').style.display = '';
+      document.getElementById('quiz-main').style.display = 'none';
+      showScreen('screen-quiz');
+    }
+
+    /* ── Подсчёт победителя ── */
+    function calculateResult() {
+      const sorted = Object.entries(quizState.scores).sort((a, b) => b[1] - a[1]);
+      const [id1, sc1] = sorted[0];
+      const [id2, sc2] = sorted[1];
+      if (sc1 - sc2 <= 1) {
+        const key = id1 + id2;
+        const keyRev = id2 + id1;
+        if (typeof COMBINED_PROFILES !== 'undefined') {
+          if (COMBINED_PROFILES[key])    return COMBINED_PROFILES[key];
+          if (COMBINED_PROFILES[keyRev]) return COMBINED_PROFILES[keyRev];
+        }
+      }
+      return id1;
+    }
+
+    /* ── showLoading (вызывается после Q10) ── */
+    function showLoading() {
+      showScreen('screen-loading'); /* логика loading — Шаг 7 */
     }
 
     /* ══════════════════════════════════════
