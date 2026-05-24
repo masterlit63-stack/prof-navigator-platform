@@ -274,6 +274,232 @@
       animation: toastOut 0.25s ease forwards;
     }
 
+    /* ══════════════════════════════════════
+       КВИЗ
+       ══════════════════════════════════════ */
+
+    /* ── Общая обёртка экрана квиза ── */
+    #screen-quiz {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    /* ── ВВОДНЫЙ ЭКРАН (Screen 0) ── */
+    .quiz-intro {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px 32px;
+      text-align: center;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .quiz-intro h1 { font-size: clamp(22px, 5vw, 32px); margin-bottom: 8px; }
+    .quiz-intro__sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+
+    .mode-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 32px;
+    }
+    .mode-card {
+      padding: 18px 20px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      background: var(--card);
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mode-card:hover  { border-color: rgba(249,115,22,0.45); background: rgba(249,115,22,0.04); }
+    .mode-card:active { transform: scale(0.98); }
+    .mode-card__emoji { font-size: 30px; flex-shrink: 0; line-height: 1; }
+    .mode-card__title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+    .mode-card__sub   { font-size: 13px; color: var(--muted); }
+
+    /* Миниатюра превью результата под выбором режима */
+    .intro-preview {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed rgba(249,115,22,0.3);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .intro-preview__arrow { color: var(--accent); font-size: 16px; flex-shrink: 0; }
+    .intro-preview__badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px;
+      background: rgba(14,165,233,0.15);
+      border: 1px solid rgba(14,165,233,0.3);
+      border-radius: 100px;
+      color: var(--blue); font-size: 12px; font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* ── ЭКРАН ВОПРОСА (Screens 1–10) ── */
+    .quiz-question-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .quiz-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 20px 20px;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Верхняя панель: назад + прогресс-бар + счётчик */
+    .quiz-top { margin-bottom: 16px; }
+    .quiz-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      padding: 6px 0;
+      margin-bottom: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .quiz-back-btn:hover { color: var(--text); }
+    .quiz-back-btn[disabled] { opacity: 0.3; pointer-events: none; }
+
+    .quiz-progress-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .quiz-progress-fill {
+      height: 100%;
+      width: 15%;
+      background: linear-gradient(90deg, var(--accent), var(--amber));
+      border-radius: 100px;
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .quiz-counter {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* Контейнер слайда — overflow:hidden для анимации */
+    .quiz-slide-container {
+      overflow: hidden;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .quiz-slide {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Заголовок вопроса */
+    .question-title {
+      font-size: 20px;
+      line-height: 1.3;
+      font-weight: 700;
+      margin-bottom: 14px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    /* Карточки ответов */
+    .answers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .answer-card {
+      min-height: 52px;
+      max-height: 72px;
+      padding: 12px 16px;
+      font-size: 15px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      overflow: hidden;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1.3;
+      color: var(--text);
+      font-family: var(--font);
+      width: 100%;
+    }
+    .answer-card:hover  { border-color: rgba(249,115,22,0.4); background: rgba(249,115,22,0.05); }
+    .answer-card:active { transform: scale(0.99); }
+    .answer-card.selected {
+      border-color: var(--accent);
+      background: rgba(249,115,22,0.1);
+      pointer-events: none; /* блокировать повторный клик */
+    }
+    .answer-card__check {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .answer-card.selected .answer-card__check {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .answer-card__check svg { opacity: 0; transition: opacity 0.1s; }
+    .answer-card.selected .answer-card__check svg { opacity: 1; }
+    .answer-card__text { flex: 1; }
+
+    /* Микрокопия */
+    .quiz-microcopy {
+      height: 22px;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+    }
+    .quiz-microcopy.visible {
+      opacity: 1;
+      animation: microFadeIn 0.1s ease;
+    }
+
     /* ── DEV-навигация (убрать перед релизом) ── */
     .dev-nav {
       position: fixed; bottom: 16px; right: 16px; z-index: 9999;
@@ -1062,12 +1288,87 @@
 
   <!-- ЭКРАН 2: КВИЗ -->
   <section id="screen-quiz" style="display:none">
-    <h1>Квиз — будет добавлен на Шаге 5</h1>
+
+    <!-- [Screen 0] Вводный — выбор режима -->
+    <div id="quiz-intro">
+      <div class="quiz-intro">
+        <h1>Узнай свой профессиональный профиль</h1>
+        <p class="quiz-intro__sub">10 вопросов · 5–7 минут · Без регистрации</p>
+
+        <p style="font-size:17px;font-weight:600;margin-bottom:12px;">Кто проходит квиз?</p>
+
+        <div class="mode-cards">
+          <button class="mode-card" onclick="selectMode('teen')">
+            <span class="mode-card__emoji" aria-hidden="true">🧑</span>
+            <div>
+              <div class="mode-card__title">Я сам — подросток</div>
+              <div class="mode-card__sub">Отвечаю за себя, вопросы на «ты»</div>
+            </div>
+          </button>
+          <button class="mode-card" onclick="selectMode('parent')">
+            <span class="mode-card__emoji" aria-hidden="true">👨‍👩‍👦</span>
+            <div>
+              <div class="mode-card__title">Я родитель — прохожу за ребёнка</div>
+              <div class="mode-card__sub">Вопросы адаптированы для вас</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Превью результата -->
+        <div class="intro-preview">
+          <span class="intro-preview__arrow">→</span>
+          <span>Ты получишь</span>
+          <span class="intro-preview__badge">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M6 2v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            Профиль Аналитик
+          </span>
+          <span style="color:var(--muted)">+ профессии и план</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- [Screens 1–10] Экран вопроса (шаблон, заполняется JS) -->
+    <div id="quiz-main" class="quiz-question-screen" style="display:none">
+      <div class="quiz-wrap">
+
+        <!-- Верхняя панель -->
+        <div class="quiz-top">
+          <button class="quiz-back-btn" id="quiz-back-btn" onclick="quizGoBack()" disabled aria-label="Назад">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Назад
+          </button>
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+          </div>
+          <div class="quiz-counter" id="quiz-counter">Вопрос 1 из 10</div>
+        </div>
+
+        <!-- Зона слайда -->
+        <div class="quiz-slide-container">
+          <div class="quiz-slide" id="quiz-slide">
+            <h2 class="question-title" id="question-title"></h2>
+            <div class="answers-list" id="answers-list">
+              <!-- Карточки ответов вставляются JS-ом -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Микрокопия -->
+        <div class="quiz-microcopy" id="quiz-microcopy" aria-live="polite"></div>
+
+      </div>
+    </div>
+
   </section>
 
-  <!-- ЭКРАН 3: LOADING -->
+  <!-- ЭКРАН 3: LOADING (заполняется в Шаге 7) -->
   <section id="screen-loading" style="display:none">
-    <h1>Загрузка — будет добавлена на Шаге 7</h1>
+    <h1 style="padding:40px 20px;color:var(--muted)">Loading — Step 7</h1>
   </section>
 
   <!-- ЭКРАН 4: РЕЗУЛЬТАТ -->
