@@ -1111,6 +1111,40 @@
       if (author) author.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    /* ══════════════════════════════════════
+       АНИМАЦИИ ЛЕНДИНГА — IntersectionObserver
+       ══════════════════════════════════════ */
+    (function initLandingAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      /* Наблюдаем за всеми .fade-in при первой загрузке лендинга */
+      function observeLanding() {
+        document.querySelectorAll('#screen-landing .fade-in').forEach(el => {
+          observer.observe(el);
+        });
+      }
+
+      /* Запускаем сразу (лендинг виден первым) и переобновляем при showScreen */
+      observeLanding();
+
+      /* Перенаблюдаем при каждом показе лендинга */
+      const origShowScreen = window.showScreen;
+      window.showScreen = function(id) {
+        origShowScreen(id);
+        if (id === 'screen-landing') {
+          /* Небольшой timeout чтобы display:block успел применяться */
+          setTimeout(observeLanding, 50);
+        }
+      };
+    })();
+
     /* ── Toast ── */
     function showToast(msg, duration) {
       const t = document.getElementById('toast');
