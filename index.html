@@ -772,6 +772,132 @@
       max-width: 340px;
     }
 
+    /* ══════════════════════════════════════
+       МОБИЛЬНАЯ АДАПТАЦИЯ
+       ══════════════════════════════════════ */
+
+    /* Убираем 300ms задержку тапа на всех кнопках */
+    button, a, [onclick] { touch-action: manipulation; }
+
+    /* ── Квиз: запрет скролла во время вопроса ── */
+    #screen-quiz.quiz-active {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── 680px+ — планшет и десктоп ── */
+    @media (min-width: 680px) {
+      /* Ответы в квизе 2×2 */
+      .answers-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .answer-card { max-height: none; }
+
+      /* Профессии в результате — 3 в ряд */
+      .professions-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* ── 679px и ниже — основной мобильный ── */
+    @media (max-width: 679px) {
+      .section    { padding: 52px 0; }
+      .section-sm { padding: 36px 0; }
+
+      /* Hero */
+      .hero        { padding: 56px 0 44px; min-height: auto; }
+      .hero__svg   { display: none; }          /* SVG декор скрываем */
+
+      /* Боли: 1 колонка */
+      .pains-grid { grid-template-columns: 1fr; }
+
+      /* Как работает: вертикально, стрелки скрыты */
+      .steps-row  { flex-direction: column; gap: 12px; margin-bottom: 32px; }
+      .step-arrow { display: none; }
+      .step       { text-align: left; padding: 20px; }
+      .step__num  { font-size: 36px; margin-bottom: 8px; }
+
+      /* Мокап результата: без поворота, full-width */
+      .mockup-wrap { flex-direction: column; gap: 28px; }
+      .mockup-card { transform: none !important; box-shadow: none; width: 100%; flex-shrink: 0; }
+      .mockup-bullets li { font-size: 15px; }
+
+      /* Отзывы: 1 колонка */
+      .reviews-grid { grid-template-columns: 1fr; }
+
+      /* Автор: фото сверху, текст под */
+      .author-wrap  { flex-direction: column; gap: 24px; text-align: center; }
+      .author-stats { justify-content: center; gap: 24px; }
+      .author-tg    { justify-content: center; }
+
+      /* Финальный CTA */
+      .final-cta .btn-primary { width: 100%; max-width: 360px; }
+
+      /* Страница результата */
+      .result-cta__btns { flex-direction: column; align-items: center; }
+      .result-cta__btns .btn { width: 100%; max-width: 360px; }
+      .result-email__row { flex-direction: column; }
+      .result-email__input { width: 100%; }
+      .professions-grid { grid-template-columns: 1fr; }
+
+      /* FAQ */
+      .faq-question { font-size: 15px; }
+
+      /* Квиз: ответы 1 колонка */
+      .answers-list { display: flex; flex-direction: column; }
+    }
+
+    /* ── 419px и ниже — маленький телефон (включая 320px) ── */
+    @media (max-width: 419px) {
+      h1 { font-size: 22px; }
+      h2 { font-size: 20px; }
+
+      /* Hero плотнее */
+      .hero            { padding: 44px 0 36px; }
+      .hero__label     { font-size: 12px; }
+      .hero__sub       { font-size: 15px; }
+      .hero__social    { font-size: 13px; }
+      .hero__micro     { font-size: 12px; }
+
+      /* Квиз — компактный на 320px */
+      .quiz-wrap       { padding: 10px 14px 14px; }
+      .quiz-back-btn   { margin-bottom: 8px; padding: 4px 0; font-size: 13px; }
+      .quiz-progress-track { margin-bottom: 4px; }
+      .quiz-counter    { font-size: 11px; }
+      .question-title  { font-size: 18px; margin-bottom: 10px; }
+      .answer-card     { font-size: 14px; padding: 10px 12px; min-height: 48px; gap: 10px; }
+      .answer-card__check { width: 18px; height: 18px; flex-shrink: 0; }
+      .quiz-microcopy  { font-size: 12px; height: 18px; margin-top: 6px; }
+
+      /* Intro квиза */
+      .quiz-intro      { padding: 32px 16px 24px; }
+      .quiz-intro h1   { font-size: 20px; }
+      .mode-card       { padding: 14px 16px; gap: 12px; }
+      .mode-card__emoji { font-size: 26px; }
+      .mode-card__title { font-size: 15px; }
+
+      /* Edge case экраны */
+      .quiz-edge-wrap  { padding: 32px 16px; }
+      .quiz-edge-emoji { font-size: 44px; }
+
+      /* Loading */
+      .loading-wrap    { padding: 32px 16px; }
+      .loading-icon    { width: 72px; height: 72px; margin-bottom: 24px; }
+      .loading-text    { font-size: 15px; }
+
+      /* Автор */
+      .author-stat__num   { font-size: 26px; }
+      .author-stats       { gap: 16px; }
+      .author-avatar      { width: 120px; height: 120px; }
+
+      /* Результат */
+      .result-profile-icon  { width: 68px; height: 68px; }
+      .result-description p { font-size: 16px; }
+      .result-step          { padding: 16px; gap: 12px; }
+      .result-step__num     { width: 30px; height: 30px; font-size: 13px; }
+    }
+
     /* ── DEV-навигация (убрать перед релизом) ── */
     .dev-nav {
       position: fixed; bottom: 16px; right: 16px; z-index: 9999;
@@ -1839,6 +1965,8 @@
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
+      /* Снять quiz-active — разрешить скролл */
+      document.getElementById('screen-quiz').classList.remove('quiz-active');
     }
 
     /* ── startQuiz: проверяет localStorage перед стартом ── */
@@ -1898,6 +2026,7 @@
       quizAnimating = false;
       hideAllQuizPanels();
       document.getElementById('quiz-main').style.display = 'flex';
+      document.getElementById('screen-quiz').classList.add('quiz-active');
       renderQuestion(quizState.currentQ);
     }
 
@@ -2052,6 +2181,8 @@
       saveQuizProgress();
       document.getElementById('quiz-intro').style.display = 'none';
       document.getElementById('quiz-main').style.display = 'flex';
+      /* Запретить скролл на экране вопроса */
+      document.getElementById('screen-quiz').classList.add('quiz-active');
       renderQuestion(0);
     }
 
