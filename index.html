@@ -500,6 +500,84 @@
       animation: microFadeIn 0.1s ease;
     }
 
+    /* ══════════════════════════════════════
+       LOADING SCREEN
+       ══════════════════════════════════════ */
+    #screen-loading {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+    .loading-wrap {
+      text-align: center;
+      max-width: 400px;
+      padding: 40px 24px;
+      width: 100%;
+    }
+    .loading-icon {
+      width: 96px; height: 96px;
+      margin: 0 auto 32px;
+      position: relative;
+    }
+    /* Внешнее вращающееся кольцо */
+    .loading-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: var(--accent);
+      border-right-color: rgba(249,115,22,0.3);
+      animation: spinRing 1.2s linear infinite;
+    }
+    .loading-ring--inner {
+      inset: 14px;
+      border-top-color: var(--amber);
+      border-right-color: rgba(251,191,36,0.3);
+      animation: spinRing 1.8s linear infinite reverse;
+    }
+    @keyframes spinRing {
+      to { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      transition: opacity 0.2s ease;
+    }
+    .loading-progress-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .loading-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--amber));
+      border-radius: 100px;
+    }
+    .loading-progress-fill.run {
+      animation: loadProgress 3s ease forwards;
+    }
+    @keyframes loadProgress {
+      0%   { width: 0%; }
+      20%  { width: 18%; }
+      50%  { width: 52%; }
+      80%  { width: 84%; }
+      100% { width: 100%; }
+    }
+    .loading-percent {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
     /* ── DEV-навигация (убрать перед релизом) ── */
     .dev-nav {
       position: fixed; bottom: 16px; right: 16px; z-index: 9999;
@@ -1366,9 +1444,24 @@
 
   </section>
 
-  <!-- ЭКРАН 3: LOADING (заполняется в Шаге 7) -->
+  <!-- ЭКРАН 3: LOADING -->
   <section id="screen-loading" style="display:none">
-    <h1 style="padding:40px 20px;color:var(--muted)">Loading — Step 7</h1>
+    <div class="loading-wrap">
+      <div class="loading-icon" aria-hidden="true">
+        <div class="loading-ring"></div>
+        <div class="loading-ring loading-ring--inner"></div>
+        <!-- Центральная точка -->
+        <svg style="position:absolute;inset:0;margin:auto;display:block" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="4" fill="var(--accent)" opacity="0.9"/>
+          <circle cx="12" cy="12" r="8" stroke="var(--accent)" stroke-width="1" opacity="0.25"/>
+        </svg>
+      </div>
+      <div class="loading-text" id="loading-text">Анализируем твои ответы...</div>
+      <div class="loading-progress-track">
+        <div class="loading-progress-fill" id="loading-progress-fill"></div>
+      </div>
+      <div class="loading-percent" id="loading-percent">0%</div>
+    </div>
   </section>
 
   <!-- ЭКРАН 4: РЕЗУЛЬТАТ -->
@@ -1687,7 +1780,65 @@
 
     /* ── showLoading (вызывается после Q10) ── */
     function showLoading() {
-      showScreen('screen-loading'); /* логика loading — Шаг 7 */
+      showScreen('screen-loading');
+
+      const fill    = document.getElementById('loading-progress-fill');
+      const textEl  = document.getElementById('loading-text');
+      const pctEl   = document.getElementById('loading-percent');
+
+      const lines = [
+        'Анализируем твои ответы...',
+        'Сравниваем с 15 профессиональными профилями...',
+        'Определяем твои сильные стороны...',
+        'Профиль готов! ✓'
+      ];
+
+      /* Запуск CSS-анимации прогресс-бара */
+      fill.classList.remove('run');
+      void fill.offsetWidth; /* reflow — сбрасывает анимацию */
+      fill.classList.add('run');
+
+      /* Счётчик процентов через requestAnimationFrame */
+      const start = performance.now();
+      const duration = 3000;
+      function tickPercent(now) {
+        const elapsed = Math.min(now - start, duration);
+        const pct = Math.round((elapsed / duration) * 100);
+        pctEl.textContent = pct + '%';
+        if (elapsed < duration) requestAnimationFrame(tickPercent);
+      }
+      requestAnimationFrame(tickPercent);
+
+      /* Смена строк каждые 750ms */
+      let lineIdx = 0;
+      textEl.textContent = lines[0];
+      const interval = setInterval(() => {
+        lineIdx++;
+        if (lineIdx >= lines.length) { clearInterval(interval); return; }
+        textEl.style.opacity = '0';
+        setTimeout(() => {
+          textEl.textContent = lines[lineIdx];
+          textEl.style.opacity = '1';
+        }, 200);
+      }, 750);
+
+      /* Через 3000ms — рассчитать и показать результат */
+      setTimeout(() => {
+        clearInterval(interval);
+        const profileId = calculateResult();
+        try {
+          const pName = (typeof PROFILES !== 'undefined' && PROFILES[profileId])
+            ? PROFILES[profileId].name : profileId;
+          localStorage.setItem('pn_result', JSON.stringify({
+            profileId,
+            profileName: pName,
+            completedAt: new Date().toISOString(),
+            scores: quizState.scores,
+          }));
+        } catch(e) {}
+        showResult(profileId);
+        showScreen('screen-result');
+      }, 3000);
     }
 
     /* ══════════════════════════════════════
