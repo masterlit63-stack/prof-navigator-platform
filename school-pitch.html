@@ -8,8 +8,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   overflow: hidden;
   background: #070e1b;
   color: #f1f5f9;
@@ -18,501 +17,328 @@ html, body {
 
 /* Сетка-фон */
 body::before {
-  content: '';
-  position: fixed; inset: 0;
+  content: ''; position: fixed; inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+  background-size: 52px 52px;
   pointer-events: none; z-index: 0;
 }
-/* Свечение */
 body::after {
-  content: '';
-  position: fixed;
-  top: -15%; left: 50%; transform: translateX(-50%);
-  width: 70%; height: 55%;
-  background: radial-gradient(ellipse, rgba(249,115,22,0.07), transparent 70%);
+  content: ''; position: fixed;
+  top: -20%; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 60%;
+  background: radial-gradient(ellipse, rgba(249,115,22,0.06), transparent 70%);
   pointer-events: none; z-index: 0;
 }
 
-/* ════ СЛАЙД ════ */
+/* ── СЛАЙД ── */
 .slide {
   position: relative; z-index: 1;
   width: 100%; height: 100%;
   display: grid;
-  grid-template-rows: 60px 1fr 50px;
-  padding: 14px 18px;
+  grid-template-rows: 50px 1fr 78px 46px;
+  padding: 13px 18px;
   gap: 10px;
 }
 
-/* ── ШАПКА ── */
+/* ─── ШАПКА ─── */
 .header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display: flex; align-items: center; gap: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
-.logo {
-  display: flex; align-items: center; gap: 9px; flex-shrink: 0;
-}
 .logo-icon {
-  width: 38px; height: 38px;
+  width: 36px; height: 36px; flex-shrink: 0;
   background: linear-gradient(135deg, #f97316, #fbbf24);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 18px rgba(249,115,22,0.4);
 }
 .logo-name {
-  font-size: 21px; font-weight: 800; letter-spacing: -0.02em;
+  font-size: 20px; font-weight: 800; letter-spacing: -0.02em;
   background: linear-gradient(135deg, #f97316, #fbbf24);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  white-space: nowrap;
 }
-.h-sep { width: 1px; height: 26px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
-.h-sub {
-  font-size: 13px; color: #94a3b8; line-height: 1.35; flex: 1;
-}
-.h-sub strong { color: #e2e8f0; font-size: 14px; }
-.h-pills { display: flex; gap: 7px; flex-shrink: 0; }
-.pill {
-  border-radius: 100px; padding: 4px 12px;
-  font-size: 12px; font-weight: 700; white-space: nowrap;
-  background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.25); color: #f97316;
-}
-.pill-g { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.25); color: #10b981; }
+.h-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+.h-sub { font-size: 13px; color: #64748b; }
+.h-sub strong { color: #94a3b8; }
 
-/* ── ТЕЛО ── */
-.body {
-  display: grid;
-  grid-template-columns: 182px 1fr 182px;
-  gap: 12px;
+/* ─── ОСНОВНОЙ ПОТОК: 3 КАРТОЧКИ ─── */
+.flow {
+  display: flex; align-items: stretch; gap: 0;
   min-height: 0;
 }
 
-/* Боковые панели */
-.side {
-  display: flex; flex-direction: column; gap: 7px; min-height: 0;
-}
-.side-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-  text-transform: uppercase; color: #475569; padding-left: 2px;
-}
-
-/* Карточка аудитории */
-.a-card {
-  flex: 1; min-height: 0;
-  background: rgba(13,23,38,0.95);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 12px;
-  padding: 10px 11px;
-  display: flex; align-items: center; gap: 9px;
-}
-.a-icon {
-  width: 32px; height: 32px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.a-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-.a-card p  { font-size: 11px; color: #64748b; line-height: 1.3; }
-
-/* Карточка преимущества */
-.v-card {
-  flex: 1; min-height: 0;
-  background: rgba(13,23,38,0.95);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 12px;
-  padding: 10px 11px;
-  display: flex; align-items: flex-start; gap: 8px;
-}
-.v-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-.v-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-.v-card p  { font-size: 11px; color: #64748b; line-height: 1.3; }
-
-/* Центр */
-.center {
-  display: flex; flex-direction: column; gap: 10px; min-height: 0;
-}
-
-/* Три этапа */
-.stages {
-  flex: 1; display: flex; align-items: stretch; gap: 0; min-height: 0;
-}
-.stage {
+.card {
   flex: 1; min-width: 0;
-  background: rgba(13,23,38,0.95);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 14px 14px 12px;
+  background: rgba(11,20,34,0.97);
+  border-radius: 16px;
+  padding: 18px 16px 14px;
   display: flex; flex-direction: column;
   position: relative; overflow: hidden;
-}
-.stage::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 3px; border-radius: 14px 14px 0 0;
-}
-.s1 { border-color: rgba(249,115,22,0.22); }
-.s1::before { background: linear-gradient(90deg, #f97316, #fbbf24); }
-.s2 { border-color: rgba(14,165,233,0.22); }
-.s2::before { background: linear-gradient(90deg, #0ea5e9, #6366f1); }
-.s3 { border-color: rgba(16,185,129,0.22); }
-.s3::before { background: linear-gradient(90deg, #10b981, #0ea5e9); }
-
-.s-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
-.s-icon {
-  width: 34px; height: 34px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.s-title h3 { font-size: 14px; font-weight: 800; line-height: 1.2; }
-.s-title p  { font-size: 10px; color: #64748b; margin-top: 1px; }
-
-.s-list { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 5px; margin-bottom: 9px; }
-.s-list li { font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
-.s-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
-
-.s-badge {
-  display: inline-block; align-self: flex-start;
-  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 100px;
-}
-
-.arr-wrap {
-  display: flex; align-items: center; justify-content: center;
-  padding: 0 3px; flex-shrink: 0;
-}
-
-/* Экосистема */
-.eco {
-  background: rgba(13,23,38,0.8);
   border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 11px;
-  padding: 9px 14px;
-  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
 }
-.eco-ttl {
+.card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px; border-radius: 16px 16px 0 0;
+}
+.c1 { border-color: rgba(249,115,22,0.2); }
+.c1::before { background: linear-gradient(90deg, #f97316, #fbbf24); }
+.c2 { border-color: rgba(14,165,233,0.2); }
+.c2::before { background: linear-gradient(90deg, #0ea5e9, #6366f1); }
+.c3 { border-color: rgba(16,185,129,0.2); }
+.c3::before { background: linear-gradient(90deg, #10b981, #0ea5e9); }
+
+/* Заголовок карточки */
+.c-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.c-icon {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.c-head h2 { font-size: 15px; font-weight: 800; line-height: 1.2; }
+.c-head p  { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+/* Разделитель «Результат» */
+.c-divider {
   font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: #475569; white-space: nowrap; margin-right: 4px;
+  text-transform: uppercase; color: #475569;
+  padding-bottom: 7px; margin-bottom: 7px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Список результатов */
+.c-list { list-style: none; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.c-list li {
+  font-size: 12px; color: #94a3b8;
+  display: flex; align-items: center; gap: 8px; line-height: 1.3;
+}
+.c-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+/* Бейдж */
+.c-badge {
+  margin-top: 12px; align-self: flex-start;
+  font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 100px;
+}
+
+/* Стрелка между карточками */
+.arrow {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px; flex-shrink: 0;
+}
+
+/* ─── АУДИТОРИЯ ─── */
+.audience {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.a-card {
+  background: rgba(11,20,34,0.97);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.a-icon {
+  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.a-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.a-card p  { font-size: 11px; color: #64748b; line-height: 1.3; }
+
+/* ─── ЭКОСИСТЕМА ─── */
+.ecosystem {
+  background: rgba(11,20,34,0.97);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 11px; padding: 0 16px;
+  display: flex; align-items: center; gap: 7px;
+}
+.eco-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #334155; white-space: nowrap; margin-right: 6px;
 }
 .e-node {
   display: flex; align-items: center; gap: 5px;
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 7px; padding: 4px 9px; white-space: nowrap;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 7px; padding: 5px 11px; white-space: nowrap;
 }
 .e-node span { font-size: 12px; font-weight: 600; }
-.e-arr { color: #f97316; font-size: 13px; opacity: 0.6; flex-shrink: 0; }
-.e-node-fin {
-  background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(251,191,36,0.07));
-  border-color: rgba(249,115,22,0.3);
+.e-arr { color: #f97316; font-size: 13px; opacity: 0.5; flex-shrink: 0; }
+.e-final {
+  background: rgba(249,115,22,0.07);
+  border-color: rgba(249,115,22,0.22);
 }
-.e-node-fin span {
+.e-final span {
   background: linear-gradient(135deg, #f97316, #fbbf24);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.e-hint {
-  flex: 1; text-align: right;
-  font-size: 10px; color: #475569; line-height: 1.3; font-style: italic;
-}
-
-/* ── ПОДВАЛ ── */
-.footer {
-  display: flex; align-items: center; justify-content: space-between;
-  padding-top: 9px;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  gap: 12px;
-}
-.f-contacts { display: flex; align-items: center; gap: 18px; }
-.f-contact { display: flex; align-items: center; gap: 5px; font-size: 12px; }
-.f-contact .lbl { color: #475569; }
-.f-contact .val { color: #f97316; font-weight: 600; }
-.f-author { font-size: 11px; color: #475569; flex: 1; text-align: center; }
-.f-author strong { color: #94a3b8; }
-.f-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.f-pilot {
-  display: flex; align-items: center; gap: 5px;
-  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25);
-  border-radius: 100px; padding: 5px 12px;
-  font-size: 11px; font-weight: 700; color: #10b981; white-space: nowrap;
-}
-.f-cta {
-  background: linear-gradient(135deg, #f97316, #fbbf24);
-  color: white; font-size: 12px; font-weight: 800;
-  padding: 7px 16px; border-radius: 100px;
-  text-decoration: none;
-  box-shadow: 0 0 14px rgba(249,115,22,0.3);
-  white-space: nowrap;
 }
 </style>
 </head>
 <body>
 <div class="slide">
 
-  <!-- ════ ШАПКА ════ -->
+  <!-- ШАПКА -->
   <div class="header">
-    <div class="logo">
-      <div class="logo-icon">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5" stroke-opacity="0.45"/>
-          <path d="M12 3L12 21M3 12L21 12" stroke="white" stroke-width="1" stroke-opacity="0.25"/>
-          <circle cx="12" cy="12" r="2.2" fill="white"/>
-          <path d="M12 3.5L14.2 10.2L12 9L9.8 10.2Z" fill="white"/>
-          <path d="M20.5 12L13.8 9.8L15 12L13.8 14.2Z" fill="white" opacity="0.55"/>
-        </svg>
-      </div>
-      <div class="logo-name">ПрофНавигатор</div>
+    <div class="logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5" stroke-opacity="0.4"/>
+        <path d="M12 3v18M3 12h18" stroke="white" stroke-width="1" stroke-opacity="0.2"/>
+        <circle cx="12" cy="12" r="2.2" fill="white"/>
+        <path d="M12 3.5L14 10L12 9L10 10Z" fill="white"/>
+        <path d="M20.5 12L14 10L15 12L14 14Z" fill="white" opacity="0.5"/>
+      </svg>
     </div>
+    <div class="logo-name">ПрофНавигатор</div>
     <div class="h-sep"></div>
-    <div class="h-sub">
-      <strong>Персональная AI-система профориентации</strong><br>
-      от первого «кем хочу стать» — до осознанного выбора профессии и карьерного пути
-    </div>
-    <div class="h-pills">
-      <div class="pill pill-g">✓ Бесплатно для школы</div>
-      <div class="pill">Пилот — один класс</div>
-    </div>
+    <div class="h-sub"><strong>Персональная система профориентации</strong></div>
   </div>
 
-  <!-- ════ ТЕЛО ════ -->
-  <div class="body">
+  <!-- ОСНОВНОЙ ПОТОК -->
+  <div class="flow">
 
-    <!-- ── ЛЕВАЯ ПАНЕЛЬ: ДЛЯ КОГО ── -->
-    <div class="side">
-      <div class="side-title">Для кого</div>
-
-      <div class="a-card">
-        <div class="a-icon" style="background:rgba(249,115,22,0.12);">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="#f97316">
-            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+    <!-- КАРТОЧКА 1 — МИНИ-ТЕСТ -->
+    <div class="card c1">
+      <div class="c-head">
+        <div class="c-icon" style="background:rgba(249,115,22,0.12);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#f97316">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
           </svg>
         </div>
         <div>
-          <h4 style="color:#f97316">Ученики 9–11 кл</h4>
-          <p>Понимают себя, получают маршрут под себя</p>
+          <h2>Мини-тест</h2>
+          <p>10 вопросов · 7 минут · бесплатно</p>
         </div>
       </div>
+      <div class="c-divider">Результат</div>
+      <ul class="c-list">
+        <li><span class="c-dot" style="background:#f97316"></span>Профиль личности (15 типов)</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Сильные стороны</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Зоны роста</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Первые шаги в профессии</li>
+      </ul>
+      <span class="c-badge" style="background:rgba(249,115,22,0.1);color:#f97316;border:1px solid rgba(249,115,22,0.25)">Быстрый вход</span>
+    </div>
 
-      <div class="a-card">
-        <div class="a-icon" style="background:rgba(14,165,233,0.12);">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="#0ea5e9">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-          </svg>
-        </div>
-        <div>
-          <h4 style="color:#0ea5e9">Родители</h4>
-          <p>Понимают ребёнка, меньше конфликтов при выборе</p>
-        </div>
-      </div>
+    <!-- СТРЕЛКА -->
+    <div class="arrow">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="#334155" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
 
-      <div class="a-card">
-        <div class="a-icon" style="background:rgba(168,85,247,0.12);">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="#a855f7">
+    <!-- КАРТОЧКА 2 — РАСШИРЕННЫЙ ТЕСТ -->
+    <div class="card c2">
+      <div class="c-head">
+        <div class="c-icon" style="background:rgba(14,165,233,0.12);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0ea5e9">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
           </svg>
         </div>
         <div>
-          <h4 style="color:#a855f7">Классные руководители</h4>
-          <p>Профиль каждого ученика — видят кому помочь</p>
+          <h2>Расширенный тест</h2>
+          <p>100–200 вопросов · бесплатно</p>
         </div>
       </div>
-
+      <div class="c-divider">Результат</div>
+      <ul class="c-list">
+        <li><span class="c-dot" style="background:#0ea5e9"></span>Персональная карта пути</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Предметы ОГЭ / ЕГЭ под профиль</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Маршрут на 30 / 90 / 180 дней</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Привязка к вузам и колледжам</li>
+      </ul>
+      <span class="c-badge" style="background:rgba(14,165,233,0.1);color:#0ea5e9;border:1px solid rgba(14,165,233,0.25)">Глубокая диагностика</span>
     </div>
 
-    <!-- ── ЦЕНТР: 3 ЭТАПА + ЭКОСИСТЕМА ── -->
-    <div class="center">
-
-      <div class="stages">
-
-        <!-- ЭТАП 1 -->
-        <div class="stage s1">
-          <div class="s-head">
-            <div class="s-icon" style="background:rgba(249,115,22,0.12);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#f97316">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-              </svg>
-            </div>
-            <div class="s-title">
-              <h3>Мини-тест</h3>
-              <p>10 вопросов · 7 минут</p>
-            </div>
-          </div>
-          <ul class="s-list">
-            <li><span class="s-dot" style="background:#f97316"></span>15 профилей личности</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Сильные стороны + зоны роста</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Первый маршрут (ОГЭ, колледж/вуз)</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Работает с телефона</li>
-            <li><span class="s-dot" style="background:#10b981"></span>Бесплатно · Без регистрации</li>
-          </ul>
-          <span class="s-badge" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.25)">✓ Уже работает</span>
-        </div>
-
-        <div class="arr-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-
-        <!-- ЭТАП 2 -->
-        <div class="stage s2">
-          <div class="s-head">
-            <div class="s-icon" style="background:rgba(14,165,233,0.12);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#0ea5e9">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-              </svg>
-            </div>
-            <div class="s-title">
-              <h3>Глубокий анализ</h3>
-              <p>~100 вопросов · 30 минут</p>
-            </div>
-          </div>
-          <ul class="s-list">
-            <li><span class="s-dot" style="background:#0ea5e9"></span>Ценности, мотивация, стиль мышления</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Персональная карта пути</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Конкретные шаги на 30 / 90 / 180 дней</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Привязка к вузам и колледжам</li>
-            <li><span class="s-dot" style="background:#10b981"></span>Бесплатно</li>
-          </ul>
-          <span class="s-badge" style="background:rgba(14,165,233,0.12);color:#0ea5e9;border:1px solid rgba(14,165,233,0.25)">⚙ В разработке</span>
-        </div>
-
-        <div class="arr-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-
-        <!-- ЭТАП 3 -->
-        <div class="stage s3">
-          <div class="s-head">
-            <div class="s-icon" style="background:rgba(16,185,129,0.12);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#10b981">
-                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
-              </svg>
-            </div>
-            <div class="s-title">
-              <h3>AI-навигатор</h3>
-              <p>Telegram / Макс · 24/7</p>
-            </div>
-          </div>
-          <ul class="s-list">
-            <li><span class="s-dot" style="background:#10b981"></span>Помнит профиль и историю</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Отвечает на любые вопросы</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Возвращается сам каждую неделю</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Ветка для родителей — диалог с ребёнком</li>
-            <li><span class="s-dot" style="background:#94a3b8"></span>Сопровождение на годы</li>
-          </ul>
-          <span class="s-badge" style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.25)">★ Следующий уровень</span>
-        </div>
-
-      </div>
-
-      <!-- ЭКОСИСТЕМА -->
-      <div class="eco">
-        <div class="eco-ttl">Образовательный путь</div>
-        <div class="e-node">
-          <span>🏫</span>
-          <span>Школа</span>
-        </div>
-        <span class="e-arr">→</span>
-        <div class="e-node">
-          <span>🎓</span>
-          <span>Колледж / ВУЗ</span>
-        </div>
-        <span class="e-arr">→</span>
-        <div class="e-node">
-          <span>🏭</span>
-          <span>Предприятие</span>
-        </div>
-        <span class="e-arr">→</span>
-        <div class="e-node e-node-fin">
-          <span>💼</span>
-          <span>Карьера</span>
-        </div>
-        <div style="flex:1"></div>
-        <div class="e-hint">
-          Маршрут учитывает реальных работодателей<br>и востребованность профессий в регионе
-        </div>
-      </div>
-
+    <!-- СТРЕЛКА -->
+    <div class="arrow">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="#334155" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
 
-    <!-- ── ПРАВАЯ ПАНЕЛЬ: ПОЧЕМУ РАБОТАЕТ ── -->
-    <div class="side">
-      <div class="side-title">Почему это работает</div>
-
-      <div class="v-card">
-        <div class="v-dot" style="background:#10b981"></div>
+    <!-- КАРТОЧКА 3 — ПРИЛОЖЕНИЕ -->
+    <div class="card c3">
+      <div class="c-head">
+        <div class="c-icon" style="background:rgba(16,185,129,0.12);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#10b981">
+            <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+          </svg>
+        </div>
         <div>
-          <h4>Честный результат</h4>
-          <p>Сильные стороны + зоны роста — пользователь верит, потому что это правда</p>
+          <h2>Приложение</h2>
+          <p>Макс (VK) / Telegram</p>
         </div>
       </div>
-
-      <div class="v-card">
-        <div class="v-dot" style="background:#f97316"></div>
-        <div>
-          <h4>7 минут до ответа</h4>
-          <p>Прямо на уроке, со смартфона — без регистрации</p>
-        </div>
-      </div>
-
-      <div class="v-card">
-        <div class="v-dot" style="background:#0ea5e9"></div>
-        <div>
-          <h4>Нейтральная система</h4>
-          <p>Нет «своих» вузов — только интересы ученика</p>
-        </div>
-      </div>
-
-      <div class="v-card">
-        <div class="v-dot" style="background:#a855f7"></div>
-        <div>
-          <h4>Растёт со временем</h4>
-          <p>От первого теста до AI-помощника на весь путь</p>
-        </div>
-      </div>
-
+      <div class="c-divider">Персональный AI-помощник</div>
+      <ul class="c-list">
+        <li><span class="c-dot" style="background:#10b981"></span>Помнит профиль и историю</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Отвечает на любые вопросы · 24/7</li>
+        <li><span class="c-dot" style="background:#94a3b8"></span>Возвращается сам каждую неделю</li>
+        <li><span class="c-dot" style="background:#f97316"></span>Для подростков</li>
+        <li><span class="c-dot" style="background:#0ea5e9"></span>Для родителей</li>
+        <li><span class="c-dot" style="background:#a855f7"></span>Для учителей</li>
+      </ul>
+      <span class="c-badge" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.25)">Сопровождение на годы</span>
     </div>
 
   </div>
 
-  <!-- ════ ПОДВАЛ ════ -->
-  <div class="footer">
+  <!-- АУДИТОРИЯ -->
+  <div class="audience">
 
-    <div class="f-contacts">
-      <div class="f-contact">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="#475569">
-          <path d="M21.05 2.85c-.28-.28-.67-.38-1.05-.27l-18 5.5a1 1 0 00-.11 1.88l7.49 3.15 3.15 7.49a1 1 0 00.93.62h.05a1 1 0 00.93-.74l5.5-18c.11-.38.01-.77-.27-1.05z"/>
+    <div class="a-card">
+      <div class="a-icon" style="background:rgba(249,115,22,0.12);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#f97316">
+          <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
         </svg>
-        <span class="lbl">Telegram</span>
-        <span class="val">@bronzelit</span>
       </div>
-      <div class="f-contact">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="#475569">
-          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-        </svg>
-        <span class="lbl">Email</span>
-        <span class="val">masterlit63@gmail.com</span>
-      </div>
-      <div class="f-contact">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="#475569">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-        </svg>
-        <span class="lbl">Сайт</span>
-        <span class="val">prof-navigator-psi.vercel.app</span>
+      <div>
+        <h4 style="color:#f97316">Подростки</h4>
+        <p>Диагностика профиля · персональный маршрут · AI-помощник</p>
       </div>
     </div>
 
-    <div class="f-author">Автор — <strong>Павел Ежов</strong> · эксперт по профориентации</div>
-
-    <div class="f-right">
-      <div class="f-pilot">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+    <div class="a-card">
+      <div class="a-icon" style="background:rgba(14,165,233,0.12);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#0ea5e9">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
         </svg>
-        1 класс · бесплатно · без обязательств
       </div>
-      <a href="https://prof-navigator-psi.vercel.app" class="f-cta">Открыть демо →</a>
+      <div>
+        <h4 style="color:#0ea5e9">Родители</h4>
+        <p>Понять ребёнка · меньше конфликтов · AI-помощник рядом</p>
+      </div>
     </div>
 
+    <div class="a-card">
+      <div class="a-icon" style="background:rgba(168,85,247,0.12);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#a855f7">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+      </div>
+      <div>
+        <h4 style="color:#a855f7">Учителя</h4>
+        <p>Профиль каждого ученика · картина по классу</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ЭКОСИСТЕМА -->
+  <div class="ecosystem">
+    <div class="eco-label">Образовательный путь</div>
+    <div class="e-node"><span>🏫</span><span>Школа</span></div>
+    <span class="e-arr">→</span>
+    <div class="e-node"><span>🎓</span><span>Колледж</span></div>
+    <span class="e-arr">→</span>
+    <div class="e-node"><span>🏛</span><span>ВУЗ</span></div>
+    <span class="e-arr">→</span>
+    <div class="e-node"><span>🏭</span><span>Предприятие</span></div>
+    <span class="e-arr">→</span>
+    <div class="e-node e-final"><span>💼</span><span>Карьера</span></div>
   </div>
 
 </div>
