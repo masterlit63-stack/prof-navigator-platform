@@ -11,6 +11,9 @@
   <meta property="og:title" content="ПрофНавигатор — узнай свою профессию за 5 минут">
   <meta property="og:description" content="Бесплатный тест профориентации. 10 вопросов — получи именованный профессиональный профиль с рекомендациями.">
   <meta property="og:url" content="https://masterlit63-stack.github.io/prof-navigator-platform/">
+  <meta property="og:image" content="https://masterlit63-stack.github.io/prof-navigator-platform/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="ПрофНавигатор">
   <meta property="og:locale" content="ru_RU">
 
@@ -898,20 +901,27 @@
       .result-step__num     { width: 30px; height: 30px; font-size: 13px; }
     }
 
-    /* ── DEV-навигация (убрать перед релизом) ── */
-    .dev-nav {
-      position: fixed; bottom: 16px; right: 16px; z-index: 9999;
-      display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+    /* ── Модальное окно (политика) ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9000;
+      background: rgba(7,14,27,0.85); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 20px;
     }
-    .dev-nav button {
-      padding: 8px 12px;
-      background: rgba(249,115,22,0.25);
-      border: 1px solid rgba(249,115,22,0.5);
-      color: var(--text);
-      border-radius: 8px;
-      font-size: 12px;
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 32px; max-width: 560px; width: 100%;
+      max-height: 80vh; overflow-y: auto; position: relative;
     }
-    .dev-nav button:hover { background: rgba(249,115,22,0.45); }
+    .modal-box h3 { font-size: 1.15rem; margin-bottom: 16px; color: var(--text); }
+    .modal-box p, .modal-box li { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+    .modal-box ul { padding-left: 20px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; color: var(--muted);
+      font-size: 22px; cursor: pointer; line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); }
 
     /* ══════════════════════════════════════
        ЛЕНДИНГ
@@ -1674,7 +1684,7 @@
             <a href="mailto:masterlit63@gmail.com">Email: masterlit63@gmail.com</a>
           </div>
           <div class="footer__links">
-            <a href="#">Политика конфиденциальности</a>
+            <a href="#" onclick="openPrivacy(event)">Политика конфиденциальности</a>
             <a href="#" onclick="scrollToAuthor(event)">Об авторе</a>
           </div>
           <p class="footer__copy">© 2026 ПрофНавигатор</p>
@@ -1925,12 +1935,22 @@
   <div id="toast" role="status" aria-live="polite"></div>
 
   <!-- DEV-навигация (убрать перед релизом) -->
-  <nav class="dev-nav" aria-hidden="true">
-    <button onclick="showScreen('screen-landing')">Landing</button>
-    <button onclick="showScreen('screen-quiz')">Quiz</button>
-    <button onclick="showScreen('screen-loading')">Loading</button>
-    <button onclick="showScreen('screen-result')">Result</button>
-  </nav>
+  <!-- Модальное окно — Политика конфиденциальности -->
+  <div class="modal-overlay" id="modal-privacy" onclick="closePrivacy(event)">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-label="Политика конфиденциальности">
+      <button class="modal-close" onclick="closePrivacyBtn()" aria-label="Закрыть">✕</button>
+      <h3>Политика конфиденциальности</h3>
+      <p><strong>ПрофНавигатор</strong> не собирает и не передаёт персональные данные на сторонние серверы.</p>
+      <ul>
+        <li>Ответы на вопросы квиза и результат теста хранятся <strong>только в вашем браузере</strong> (localStorage). Они никуда не отправляются.</li>
+        <li>Если вы оставляете email — он используется только для отправки результата. Мы не передаём его третьим лицам.</li>
+        <li>Сайт может использовать Яндекс Метрику для анонимной статистики посещений (без персональных данных).</li>
+        <li>Очистка кэша браузера полностью удаляет все локально сохранённые данные.</li>
+      </ul>
+      <p>Сервис предназначен для пользователей 14+ лет. Если вы младше 14 — попросите родителей.</p>
+      <p style="margin-top:16px; font-size:0.8rem;">По вопросам: <a href="mailto:masterlit63@gmail.com" style="color:var(--accent)">masterlit63@gmail.com</a></p>
+    </div>
+  </div>
 
   <script>
     function showScreen(id) {
@@ -2053,6 +2073,23 @@
       const author = document.querySelector('.author-wrap');
       if (author) author.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+
+    /* ── Политика конфиденциальности ── */
+    function openPrivacy(e) {
+      if (e) e.preventDefault();
+      document.getElementById('modal-privacy').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePrivacyBtn() {
+      document.getElementById('modal-privacy').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closePrivacy(e) {
+      if (e.target === document.getElementById('modal-privacy')) closePrivacyBtn();
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closePrivacyBtn();
+    });
 
     /* ══════════════════════════════════════
        КВИЗ — константы
