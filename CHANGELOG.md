@@ -4,6 +4,13 @@
 
 ---
 
+## [0.20] — 2026-05-27
+
+### Добавлено
+- `RESEARCH.md` — Исследование №2 (ретроактивно): UX-паттерны для Telegram Mini App и EdTech. Охват: обязательные экраны (10+ экранов), UI-компоненты (15+), UX-паттерны для подростков, полный обзор Telegram Mini Apps API (HapticFeedback, CloudStorage, MainButton, BackButton, themeParams, safeAreaInset, shareMessage, shareToStory и др.), паттерны доверия и конверсии. 15 источников: Medium, UX Collective, official Telegram docs, NIH/PubMed, MIT Technology Review, ASI.ru, Duolingo case studies.
+
+---
+
 ## [0.19] — 2026-05-27
 
 ### Добавлено
