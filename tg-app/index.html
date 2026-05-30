@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>ПрофНавигатор</title>
+
+  <!-- Telegram Mini App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ─── ЭКРАН 1: Welcome ──────────────────────────────────────────────── -->
+  <div id="screen-welcome" class="screen screen-welcome">
+    <div class="welcome-logo">🧭</div>
+    <div class="welcome-title">ПрофНавигатор</div>
+    <div class="welcome-sub">Узнай свой тип — найди профессию мечты</div>
+
+    <div class="welcome-stats">
+      <div class="stat-item">
+        <div class="stat-num">15</div>
+        <div class="stat-label">вопросов</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6</div>
+        <div class="stat-label">архетипов</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">20</div>
+        <div class="stat-label">профессий</div>
+      </div>
+    </div>
+
+    <div class="welcome-features">
+      <div class="feature-item">
+        <span class="feature-item-icon">🎯</span>
+        <span>Персональный профиль по 6 измерениям</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-item-icon">🏆</span>
+        <span>Топ-3 профессии под твой тип</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-item-icon">📋</span>
+        <span>Конкретный план: что читать и делать</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ЭКРАН 2: Quiz ────────────────────────────────────────────────── -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-fill" style="width:15%"></div>
+        </div>
+        <div class="quiz-progress-label" id="quiz-progress-label">1 / 15</div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-question" id="quiz-question"></div>
+      <div class="quiz-hint" id="quiz-hint"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+    </div>
+  </div>
+
+  <!-- ─── ЭКРАН 3: Loading ─────────────────────────────────────────────── -->
+  <div id="screen-loading" class="screen screen-loading">
+    <div class="loading-icon">🧭</div>
+    <div class="loading-title">Анализирую твои ответы...</div>
+    <div class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+    <div class="loading-steps">
+      <div class="loading-step">🔍 Изучаю твой профиль</div>
+      <div class="loading-step">📊 Строю карту навыков</div>
+      <div class="loading-step">🎯 Подбираю профессии</div>
+    </div>
+  </div>
+
+  <!-- ─── ЭКРАН 4: Archetype ───────────────────────────────────────────── -->
+  <div id="screen-archetype" class="screen screen-archetype">
+    <div class="archetype-hero">
+      <span class="arch-emoji" id="arch-emoji">🔭</span>
+      <div class="arch-label">Твой архетип</div>
+      <div class="arch-name" id="arch-name">Исследователь</div>
+      <div class="arch-tagline" id="arch-tagline">Видишь систему там, где другие видят хаос</div>
+      <div class="rarity-badge">
+        <span>👥</span>
+        <span id="arch-rarity">Встречается у 19% подростков</span>
+      </div>
+    </div>
+
+    <div class="arch-desc" id="arch-desc"></div>
+
+    <div class="radar-section">
+      <div class="radar-title">Твои сильные стороны</div>
+      <div class="radar-svg-wrap" id="radar-svg"></div>
+    </div>
+  </div>
+
+  <!-- ─── ЭКРАН 5: Professions ─────────────────────────────────────────── -->
+  <div id="screen-professions" class="screen screen-professions">
+    <div class="section-header">Профессии для тебя</div>
+    <div class="section-sub">На основе твоего профиля — топ-3 совпадения</div>
+    <div id="professions-list"></div>
+  </div>
+
+  <!-- ─── ЭКРАН 6: Profession Detail ──────────────────────────────────── -->
+  <div id="screen-profession" class="screen screen-profession">
+    <div class="detail-hero">
+      <span class="detail-emoji" id="detail-emoji">💻</span>
+      <div class="detail-name" id="detail-name">Программист</div>
+      <span class="match-big" id="detail-match">95% совпадение</span>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">О профессии</div>
+      <div class="detail-desc" id="detail-desc"></div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">Ключевые навыки</div>
+      <div class="skills-list" id="detail-skills"></div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-row">
+        <span class="detail-row-label">Зарплата</span>
+        <span id="detail-salary"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-row-label">ЕГЭ</span>
+        <span id="detail-exams"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-row-label">Вузы</span>
+        <span id="detail-universities"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ЭКРАН 7: Plan ────────────────────────────────────────────────── -->
+  <div id="screen-plan" class="screen screen-plan">
+    <div class="section-header">Твой план действий</div>
+    <div class="plan-subtitle" id="plan-prof-name"></div>
+
+    <div class="plan-tabs">
+      <button class="plan-tab active" data-tab="study">📚 Учёба</button>
+      <button class="plan-tab" data-tab="projects">🔬 Проекты</button>
+      <button class="plan-tab" data-tab="content">📖 Контент</button>
+      <button class="plan-tab" data-tab="nextStep">🎯 Первый шаг</button>
+    </div>
+
+    <div class="plan-content active" data-tab="study" id="plan-tab-study"></div>
+    <div class="plan-content" data-tab="projects" id="plan-tab-projects"></div>
+    <div class="plan-content" data-tab="content" id="plan-tab-content"></div>
+    <div class="plan-content" data-tab="nextStep" id="plan-tab-nextStep"></div>
+  </div>
+
+  <!-- ─── ЭКРАН 8: Share ───────────────────────────────────────────────── -->
+  <div id="screen-share" class="screen screen-share">
+    <div class="share-hero-emoji" id="share-hero-emoji">🔭</div>
+    <div class="share-title" id="share-title">Ты — Исследователь</div>
+    <div class="share-sub">Поделись результатом с родителями!</div>
+
+    <div class="share-result-card">
+      <div class="share-card-emoji" id="share-card-emoji">🔭</div>
+      <div class="share-card-archetype" id="share-card-archetype">Исследователь</div>
+      <div class="share-card-divider"></div>
+      <div class="share-card-prof" id="share-card-prof">Топ профессия: Программист</div>
+      <div class="share-card-match" id="share-card-match">Совпадение 87%</div>
+    </div>
+
+    <button class="share-btn" id="btn-share">
+      📤 Поделиться результатом
+    </button>
+    <button class="share-btn-secondary" id="btn-restart">
+      Пройти ещё раз
+    </button>
+  </div>
+
+</div>
+
+<!-- Резервная кнопка для браузерного превью (скрыта по умолчанию) -->
+<button id="main-btn">Начать тест →</button>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

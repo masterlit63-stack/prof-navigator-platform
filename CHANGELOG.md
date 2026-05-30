@@ -4,6 +4,18 @@
 
 ---
 
+## [0.25] — 2026-05-30
+
+### Добавлено
+- `tg-app/` — полная Telegram Mini App: 8 экранов, готова к деплою
+  - `tg-app/index.html` — точка входа: HTML всех 8 экранов (Welcome, Quiz, Loading, Archetype, Professions, Profession, Plan, Share)
+  - `tg-app/css/app.css` — нативный Telegram-стиль: CSS-переменные под themeParams, slide-анимации 280ms, safe area insets, dark theme support
+  - `tg-app/js/data.js` — данные: 15 вопросов квиза, 6 архетипов с планами, 20 профессий (зарплата, ЕГЭ, вузы, 6-мерный вектор), нелинейный прогресс, cosine similarity
+  - `tg-app/js/app.js` — логика: Telegram SDK, навигация с историей, квиз, загрузка, радар SVG, план, шаринг, CloudStorage + localStorage fallback, HapticFeedback
+  - `tg-app/CLAUDE.md` — справочник: какой файл за что, навигация, где менять данные, Telegram API
+
+---
+
 ## [0.24] — 2026-05-30
 
 ### Изменено
