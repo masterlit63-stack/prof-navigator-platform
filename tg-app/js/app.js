@@ -36,6 +36,9 @@ function init() {
     const mainBtn = document.getElementById('main-btn');
     mainBtn.style.display = 'block';
     mainBtn.addEventListener('click', handleMainButtonClick);
+
+    // Кнопка Назад для браузера
+    document.getElementById('back-btn').addEventListener('click', handleBack);
   }
 
   showScreen('welcome', false);
@@ -125,8 +128,13 @@ function onScreenEnter(name) {
 function updateBackButton() {
   const hideBackOn = ['welcome', 'quiz', 'loading', 'share'];
   const showBack = state.screenHistory.length > 0 && !hideBackOn.includes(state.currentScreen);
+
   if (isTelegram) {
     showBack ? tg.BackButton.show() : tg.BackButton.hide();
+  } else {
+    const btn = document.getElementById('back-btn');
+    btn.style.display = showBack ? 'flex' : 'none';
+    document.body.classList.toggle('has-back', showBack);
   }
 }
 
